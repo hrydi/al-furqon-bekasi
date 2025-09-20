@@ -41,6 +41,22 @@ router.get('/news/top', (req, res, next) => {
   homeRoutes(req, res, next);
 });
 
+// Video endpoints
+router.get('/videos/featured', (req, res, next) => {
+  req.url = '/videos/featured';
+  homeRoutes(req, res, next);
+});
+
+router.get('/videos', (req, res, next) => {
+  req.url = '/videos';
+  homeRoutes(req, res, next);
+});
+
+router.get('/videos/:id', (req, res, next) => {
+  req.url = `/videos/${req.params.id}`;
+  homeRoutes(req, res, next);
+});
+
 // CRUD endpoints for main resources
 router.get('/articles', (req, res, next) => {
   req.url = '/articles';

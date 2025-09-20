@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HomeService } from '../../services/homeService';
 import { ApiResponse } from '../../utils/response';
+import { PrismaClient } from '@prisma/client';
 import { prisma } from '../../models/prisma';
 
 /**
@@ -987,6 +988,152 @@ export class HomeController {
       const response = ApiResponse.success(
         news,
         'News loaded successfully'
+      );
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // ==================== VIDEOS ====================
+
+  /**
+   * GET /api/v1/videos
+   * Get all videos with pagination and filtering
+   */
+  static async getAllVideos(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const category = req.query.category as string;
+      const skip = (page - 1) * limit;
+
+      // Build where clause
+      const where: any = { isActive: true };
+      if (category) where.category = category;
+
+      const [videos, totalCount] = await Promise.all([
+  (prisma as any).video.findMany({
+          where,
+          orderBy: { orderIndex: 'asc' },
+          skip,
+          take: limit,
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            youtubeUrl: true,
+            thumbnailUrl: true,
+            duration: true,
+            category: true,
+            viewCount: true,
+            orderIndex: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }),
+  (prisma as any).video.count({ where })
+      ]);
+
+      const totalPages = Math.ceil(totalCount / limit);
+
+      const response = ApiResponse.success(
+        {
+          data: videos,
+          pagination: {
+            page,
+            limit,
+            totalItems: totalCount,
+            totalPages
+          }
+        },
+        'Videos loaded successfully'
+      );
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/videos/:id
+   * Get video by ID
+   */
+  static async getVideoById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      
+  const video = await (prisma as any).video.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          youtubeUrl: true,
+          thumbnailUrl: true,
+          duration: true,
+          category: true,
+          viewCount: true,
+          orderIndex: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      });
+
+      if (!video || !video.isActive) {
+        return res.status(404).json(
+          ApiResponse.error('Video not found', 404)
+        );
+      }
+
+      // Increment view count
+      await (prisma as any).video.update({
+        where: { id },
+        data: { viewCount: { increment: 1 } }
+      });
+
+      const response = ApiResponse.success(
+        video,
+        'Video loaded successfully'
+      );
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/videos/featured
+   * Get featured videos (first 6 active videos ordered by orderIndex)
+   */
+  static async getFeaturedVideos(req: Request, res: Response, next: NextFunction) {
+    try {
+      const limit = parseInt(req.query.limit as string) || 6;
+      
+  const videos = await (prisma as any).video.findMany({
+        where: { isActive: true },
+        orderBy: { orderIndex: 'asc' },
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          youtubeUrl: true,
+          thumbnailUrl: true,
+          duration: true,
+          category: true,
+          viewCount: true,
+          createdAt: true
+        }
+      });
+
+      const response = ApiResponse.success(
+        videos,
+        'Featured videos loaded successfully'
       );
 
       res.json(response);

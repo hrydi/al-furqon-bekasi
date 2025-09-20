@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "windows"]
+  binaryTargets = ["native", "windows", "darwin"]
 }
 
 datasource db {
@@ -412,6 +412,31 @@ model UserSession {
   @@index([isActive])
   @@index([expiresAt])
   @@map("user_sessions")
+}
+
+// Videos Model (YouTube Video Management)
+model Video {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  youtubeUrl   String
+  thumbnailUrl String?
+  duration     String?
+  isActive     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+  tags         String?
+  orderIndex   Int      @default(0)
+  category     String   @default("general")
+  viewCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([isFeatured])
+  @@index([orderIndex])
+  @@index([category])
+  @@index([createdAt])
+  @@map("videos")
 }
 
 // --- Graha Subagdja Models ---

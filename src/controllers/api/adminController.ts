@@ -813,6 +813,121 @@ export class AdminController {
     }
   }
 
+  // ==================== VIDEOS MANAGEMENT ====================
+
+  /**
+   * GET /api/v1/admin/videos
+   * Get videos with pagination and filters
+   */
+  static async getVideos(req: Request, res: Response, next: NextFunction) {
+    try {
+      const filters: AdminFilters = {
+        page: parseInt(req.query.page as string) || 1,
+        limit: parseInt(req.query.limit as string) || 10,
+        search: req.query.search as string,
+        category: req.query.category as string,
+        isActive: req.query.isActive ? req.query.isActive === 'true' : undefined,
+        sortBy: req.query.sortBy as string || 'orderIndex',
+        sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'asc'
+      };
+
+      const result = await AdminService.getVideos(filters);
+      
+      const response = ApiResponse.success(result, 'Videos retrieved successfully');
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/admin/videos/:id
+   * Get single video
+   */
+  static async getVideo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      
+      const video = await AdminService.getVideoById(id);
+      
+      if (!video) {
+        return res.status(404).json(
+          ApiResponse.error('Video not found', 404)
+        );
+      }
+
+      const response = ApiResponse.success(video, 'Video retrieved successfully');
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /api/v1/admin/videos
+   * Create new video
+   */
+  static async createVideo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const videoData = req.body;
+
+      // Basic validation
+      if (!videoData.title || !videoData.youtubeUrl) {
+        return res.status(400).json(
+          ApiResponse.error('Title and YouTube URL are required', 400)
+        );
+      }
+
+      const video = await AdminService.createVideo(videoData);
+      
+      const response = ApiResponse.success(video, 'Video created successfully');
+      res.status(201).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * PUT /api/v1/admin/videos/:id
+   * Update video
+   */
+  static async updateVideo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      const video = await AdminService.updateVideo(id, updateData);
+      
+      if (!video) {
+        return res.status(404).json(
+          ApiResponse.error('Video not found', 404)
+        );
+      }
+
+      const response = ApiResponse.success(video, 'Video updated successfully');
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * DELETE /api/v1/admin/videos/:id
+   * Delete video
+   */
+  static async deleteVideo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      await AdminService.deleteVideo(id);
+      
+      const response = ApiResponse.success(null, 'Video deleted successfully');
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // ==================== FILE UPLOAD ====================
 
   /**

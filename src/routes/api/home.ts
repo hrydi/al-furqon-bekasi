@@ -63,6 +63,7 @@ router.get('/articles/featured', HomeController.getFeaturedArticles);
 router.get('/donations/active', HomeController.getActiveDonations);
 router.get('/news/latest', HomeController.getLatestNews);
 router.get('/news/top', HomeController.getTopNews);
+router.get('/videos/featured', HomeController.getFeaturedVideos);
 
 // ===== CRUD ROUTES =====
 router.get('/articles', HomeController.getAllArticles);
@@ -71,6 +72,8 @@ router.get('/donations', HomeController.getAllDonations);
 router.get('/donations/:id', HomeController.getDonationById);
 router.get('/news', HomeController.getAllNews);
 router.get('/news/:id', HomeController.getNewsById);
+router.get('/videos', HomeController.getAllVideos);
+router.get('/videos/:id', HomeController.getVideoById);
 
 // ===== SLUG-BASED ROUTES =====
 router.get('/articles/slug/:slug', HomeController.getArticleBySlug);

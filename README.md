@@ -7,7 +7,8 @@
 | **For** | **File** | **Description** |
 |---------|----------|-----------------|
 | 🚀 **Quick Start** | [QUICK_SETUP.md](QUICK_SETUP.md) | Setup backend dalam 5 menit |
-| 📖 **API Reference** | [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Complete API documentation |
+| � **PostgreSQL Migration** | [POSTGRESQL_MIGRATION.md](POSTGRESQL_MIGRATION.md) | SQLite ke PostgreSQL guide |
+| �📖 **API Reference** | [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Complete API documentation |
 | 🔗 **Frontend Integration** | [FRONTEND_INTEGRATION.md](FRONTEND_INTEGRATION.md) | Frontend integration guide |
 | 🎨 **Framework Examples** | [FRAMEWORK_EXAMPLES.md](FRAMEWORK_EXAMPLES.md) | Next.js, React, Vue examples |
 | ⚙️ **Environment Config** | [ENVIRONMENT_CONFIG.md](ENVIRONMENT_CONFIG.md) | Environment templates |
@@ -20,7 +21,7 @@ Modern backend API untuk Content Management System Masjid Al-Furqon dengan fitur
 ### 🛠️ Tech Stack
 - **Runtime**: Node.js 18+ + TypeScript
 - **Framework**: Express.js
-- **Database**: SQLite (dev) / PostgreSQL (prod) 
+- **Database**: PostgreSQL (SQLite untuk development)
 - **ORM**: Prisma
 - **Authentication**: JWT
 - **Documentation**: Swagger UI
@@ -44,19 +45,35 @@ Ingin langsung coba? Ikuti [QUICK_SETUP.md](QUICK_SETUP.md) untuk setup backend 
 
 ```bash
 # 1. Clone & install
-git clone <repo-url> && cd BE_Al-Furqon && yarn install
+git clone <repo-url> && cd BE_Al-Furqon && npm install
 
 # 2. Setup environment
 cp .env.example .env
 
-# 3. Setup database
-yarn prisma:migrate && yarn prisma:seed
+# 3. Setup PostgreSQL database (recommended)
+npm run setup
+
+# Or manual setup:
+npm run db:up
+npm run prisma:migrate
+npm run prisma:seed
 
 # 4. Start server
-yarn dev
+npm run dev
 ```
 
 **✅ Backend running at** `http://localhost:5000`
+
+## 🐘 PostgreSQL Migration
+
+**Update Terbaru**: Proyek ini telah dimigrasikan dari SQLite ke PostgreSQL untuk production readiness.
+
+- ✅ **Zero Breaking Changes** - Semua API tetap sama
+- ✅ **Same Database Schema** - Struktur database identik 
+- ✅ **Auto Setup** - Docker Compose untuk development
+- ✅ **Production Ready** - Siap deploy ke Railway, Vercel, Heroku
+
+**Panduan lengkap**: [POSTGRESQL_MIGRATION.md](POSTGRESQL_MIGRATION.md)
 
 ## 🎯 Key Features
 

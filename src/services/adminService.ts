@@ -1,4 +1,5 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { prisma } from '../models/prisma';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import {
@@ -21,8 +22,6 @@ import {
   RecentActivity,
   ChartData,
 } from '../types/admin';
-
-const prisma = new PrismaClient();
 
 export class AdminService {
   static async authenticateAdmin(username: string, password: string) {
@@ -1113,5 +1112,104 @@ export class AdminService {
         hasPrev: page > 1
       }
     };
+  }
+
+  // ==================== VIDEO MANAGEMENT ====================
+
+  static async getVideos(filters: AdminFilters): Promise<PaginatedResponse<any>> {
+    const { page = 1, limit = 10, search, category, sortBy = 'orderIndex', sortOrder = 'asc', isActive } = filters;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    if (category) {
+      where.category = category;
+    }
+
+    if (isActive !== undefined) {
+      where.isActive = isActive;
+    }
+
+    const [videos, total] = await Promise.all([
+  (prisma as any).video.findMany({
+        where,
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit
+      }),
+  (prisma as any).video.count({ where })
+    ]);
+
+    return {
+      data: videos,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1
+      }
+    };
+  }
+
+  static async getVideoById(id: string) {
+    return await (prisma as any).video.findUnique({
+      where: { id }
+    });
+  }
+
+  static async createVideo(data: any) {
+    // Extract YouTube video ID from URL
+    const youtubeId = this.extractYouTubeId(data.youtubeUrl);
+    const thumbnailUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : null;
+
+    return await (prisma as any).video.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        youtubeUrl: data.youtubeUrl,
+        thumbnailUrl,
+        duration: data.duration,
+        category: data.category || 'general',
+        orderIndex: data.orderIndex || 0,
+        isActive: data.isActive !== undefined ? data.isActive : true
+      }
+    });
+  }
+
+  static async updateVideo(id: string, data: any) {
+    const updateData: any = { ...data };
+
+    // Extract YouTube video ID from URL if URL is being updated
+    if (data.youtubeUrl) {
+      const youtubeId = this.extractYouTubeId(data.youtubeUrl);
+      updateData.thumbnailUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : null;
+    }
+
+    return await (prisma as any).video.update({
+      where: { id },
+      data: updateData
+    });
+  }
+
+  static async deleteVideo(id: string) {
+    return await (prisma as any).video.delete({
+      where: { id }
+    });
+  }
+
+  // Helper method to extract YouTube video ID from URL
+  private static extractYouTubeId(url: string): string | null {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
   }
 }

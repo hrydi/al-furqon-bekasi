@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: alfurqon-postgres
+    environment:
+      POSTGRES_DB: alfurqon_db
+      POSTGRES_USER: alfurqon_user
+      POSTGRES_PASSWORD: alfurqon_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    networks:
+      - alfurqon-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alfurqon_user -d alfurqon_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: alfurqon-backend
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://alfurqon_user:alfurqon_password@postgres:5432/alfurqon_db
+      - PORT=5001
+      - JWT_SECRET=your-jwt-secret-key
+      - JWT_REFRESH_SECRET=your-jwt-refresh-secret-key
+    ports:
+      - "5001:5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - alfurqon-network
+    volumes:
+      - ./uploads:/app/uploads
+
+networks:
+  alfurqon-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

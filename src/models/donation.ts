@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import slugify from 'slugify';
 
 export const DonationModel = {
   findAll: () => {
@@ -7,7 +8,7 @@ export const DonationModel = {
     });
   },
 
-  findById: (id: number) => {
+  findById: (id: string) => {
     return prisma.donation.findUnique({
       where: { id }
     });
@@ -17,27 +18,46 @@ export const DonationModel = {
     title: string;
     description: string;
     targetAmount: number;
+    detail?: string;
     image?: string;
+    bankName?: string;
+    accountNumber?: string;
+    accountName?: string;
+    startDate?: Date;
+    endDate?: Date;
   }) => {
+    const slug = slugify(data.title, { lower: true, strict: true });
     return prisma.donation.create({
-      data
+      data: {
+        ...data,
+        slug
+      }
     });
   },
 
-  update: (id: number, data: {
+  update: (id: string, data: {
     title?: string;
     description?: string;
-    amount?: number;
+    detail?: string;
     targetAmount?: number;
     image?: string;
+    bankName?: string;
+    accountNumber?: string;
+    accountName?: string;
+    startDate?: Date;
+    endDate?: Date;
   }) => {
+    const updateData: any = { ...data };
+    if (data.title) {
+      updateData.slug = slugify(data.title, { lower: true, strict: true });
+    }
     return prisma.donation.update({
       where: { id },
-      data
+      data: updateData
     });
   },
 
-  delete: (id: number) => {
+  delete: (id: string) => {
     return prisma.donation.delete({
       where: { id }
     });

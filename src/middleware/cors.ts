@@ -8,7 +8,6 @@ const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) !== -1) {

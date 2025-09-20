@@ -100,8 +100,13 @@ async function seedAdminUsers() {
 
 async function main() {
   try {
-    
-    await seedAdminUsers();
+    console.log('🌱 Starting admin users seeding...');
+    const result = await seedAdminUsers();
+    console.log('✅ Admin users created successfully!');
+    console.log('🔑 Login credentials:');
+    console.log('   Super Admin: superadmin@alfurqon.com / admin123');
+    console.log('   Admin: admin@alfurqon.com / admin123');
+    console.log('   Editor: editor@alfurqon.com / admin123');
   } catch (error) {
     console.error('❌ Error during seeding:', error);
     throw error;

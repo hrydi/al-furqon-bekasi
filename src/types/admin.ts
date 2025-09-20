@@ -152,6 +152,7 @@ export interface AdminFilters {
   dateTo?: string;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  isActive?: boolean;
 }
 
 export interface CreateArticleRequest {

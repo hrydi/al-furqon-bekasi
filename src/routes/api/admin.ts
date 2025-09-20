@@ -40,6 +40,15 @@ const upload = multer({
 // These routes don't require authentication
 
 router.post('/auth/login', AdminController.login);
+// debug GET to help frontend devs see the correct endpoint without changing login behavior
+router.get('/auth/login', (req, res) => {
+  res.json({
+    ok: true,
+    message: 'This endpoint expects POST /api/v1/admin/auth/login with { username, password }.',
+    method: 'POST',
+    path: '/api/v1/admin/auth/login'
+  });
+});
 router.post('/auth/refresh', AdminController.refreshToken);
 router.get('/auth/debug', AdminController.debugAuth);
 
@@ -100,6 +109,18 @@ router.get('/users', requireSuperAdmin, AdminController.getUsers);
 router.post('/users', requireSuperAdmin, AdminController.createUser);
 router.put('/users/:id', requireSuperAdmin, AdminController.updateUser);
 router.delete('/users/:id', requireSuperAdmin, AdminController.deleteUser);
+
+// ==================== FILE UPLOAD ====================
+
+router.get('/transactions', requireAnyAdmin, AdminController.getTransactions);
+
+// ==================== VIDEOS MANAGEMENT ====================
+
+router.get('/videos', requireAnyAdmin, AdminController.getVideos);
+router.get('/videos/:id', requireAnyAdmin, AdminController.getVideo);
+router.post('/videos', requireAnyAdmin, AdminController.createVideo);
+router.put('/videos/:id', requireAnyAdmin, AdminController.updateVideo);
+router.delete('/videos/:id', requireAnyAdmin, AdminController.deleteVideo);
 
 // ==================== FILE UPLOAD ====================
 

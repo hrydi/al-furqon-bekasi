@@ -2,7 +2,7 @@
 
 import { activityCards, donationCards, newsCards, upcomingCards, facilityCards } from '../src/utils/staticData'
 // Import fetch for Node.js
-import fetch from 'node-fetch'
+// import fetch from 'node-fetch'
 
 interface UploadResult {
   success: boolean
