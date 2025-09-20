@@ -279,9 +279,6 @@ export class HomeService {
     return article;
   }
 
-  /**
-   * Increment news views
-   */
   static async incrementNewsViews(id: string) {
     const news = await prisma.news.update({
       where: { id },

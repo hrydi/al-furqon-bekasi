@@ -2,6 +2,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import swaggerUi from 'swagger-ui-express';
+import grahaSubagdjaRouter from './grahaSubagdja';
 
 config();
 
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
       donations: '/api/v1/donations',
       news: '/api/v1/news',
       auth: '/api/v1/auth',
+      grahaSubagdja: '/api/v1/graha-subagdja',
       documentation: '/api-docs'
     },
     documentation: 'API untuk Content Management System Masjid Al-Furqon'
@@ -413,6 +415,9 @@ app.post('/api/v1/news', async (req, res) => {
     });
   }
 });
+
+// Graha Subagdja routes
+app.use('/api/v1/graha-subagdja', grahaSubagdjaRouter);
 
 app.use((err: any, req: any, res: any, next: any) => {
   console.error('Unhandled error:', err);

@@ -4,8 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // User Model untuk Authentication
@@ -412,4 +412,57 @@ model UserSession {
   @@index([isActive])
   @@index([expiresAt])
   @@map("user_sessions")
+}
+
+// --- Graha Subagdja Models ---
+
+model UMKMPartner {
+  id               Int      @id @default(autoincrement())
+  name             String
+  category         String
+  description      String
+  services         String[]
+  contactPhone     String
+  contactWhatsapp  String
+  contactInstagram String
+  image            String
+
+  @@map("umkm_partners")
+}
+
+model GalleryImage {
+  id       Int                  @id @default(autoincrement())
+  title    String
+  image    String
+  category GalleryImageCategory
+
+  @@map("gallery_images")
+}
+
+enum GalleryImageCategory {
+  facility
+  event
+  ceremony
+  interior
+  exterior
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+
+  @@map("faqs")
+}
+
+model FacilityInfo {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  capacity    String
+  facilities  String[]
+  price       String
+  contact     String
+
+  @@map("facility_info")
 }
