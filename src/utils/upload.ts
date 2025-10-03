@@ -4,7 +4,7 @@ import path from 'path';
 
 const storage = multer.diskStorage({
   destination: (_req: Express.Request, _file: Express.Multer.File, cb) => {
-    cb(null, 'uploads/'); // ensure this folder exists
+    cb(null, 'uploads/'); 
   },
   filename: (_req: Express.Request, file: Express.Multer.File, cb) => {
     const ext = path.extname(file.originalname);

@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { AdminController } from '../../controllers/api/adminController';
 import { DashboardController } from '../../controllers/dashboardController';
-import { adminAuth, requireSuperAdmin, requireAnyAdmin } from '../../middleware/adminAuth';
+import { adminAuth, requireSuperAdmin, requireAdmin, requireAnyAdmin } from '../../middleware/adminAuth';
 
 const router = Router();
 
@@ -105,10 +105,11 @@ router.delete('/news/:id', requireAnyAdmin, AdminController.deleteNews);
 
 // ==================== USER MANAGEMENT ====================
 
-router.get('/users', requireSuperAdmin, AdminController.getUsers);
-router.post('/users', requireSuperAdmin, AdminController.createUser);
-router.put('/users/:id', requireSuperAdmin, AdminController.updateUser);
-router.delete('/users/:id', requireSuperAdmin, AdminController.deleteUser);
+router.get('/users', requireAdmin, AdminController.getUsers);
+router.post('/users', requireAdmin, AdminController.createUser);
+router.put('/users/:id', requireAdmin, AdminController.updateUser);
+router.delete('/users/:id', requireAdmin, AdminController.deleteUser);
+router.patch('/users/:id/status', requireAdmin, AdminController.updateUserStatus);
 
 // ==================== FILE UPLOAD ====================
 
@@ -121,6 +122,39 @@ router.get('/videos/:id', requireAnyAdmin, AdminController.getVideo);
 router.post('/videos', requireAnyAdmin, AdminController.createVideo);
 router.put('/videos/:id', requireAnyAdmin, AdminController.updateVideo);
 router.delete('/videos/:id', requireAnyAdmin, AdminController.deleteVideo);
+
+// ==================== GRAHA SUBAGDJA MANAGEMENT ====================
+
+import { 
+  createUMKMPartner,
+  updateUMKMPartner,
+  deleteUMKMPartner,
+  createGalleryItem,
+  updateGalleryItem,
+  deleteGalleryItem,
+  createFAQ,
+  updateFAQ,
+  deleteFAQ,
+  updateFacilityInfo
+} from '../../controllers/grahaController';
+
+// UMKM Partners
+router.post('/graha/umkm-partners', requireAnyAdmin, createUMKMPartner);
+router.put('/graha/umkm-partners/:id', requireAnyAdmin, updateUMKMPartner);
+router.delete('/graha/umkm-partners/:id', requireAnyAdmin, deleteUMKMPartner);
+
+// Gallery
+router.post('/graha/gallery', requireAnyAdmin, createGalleryItem);
+router.put('/graha/gallery/:id', requireAnyAdmin, updateGalleryItem);
+router.delete('/graha/gallery/:id', requireAnyAdmin, deleteGalleryItem);
+
+// FAQ
+router.post('/graha/faqs', requireAnyAdmin, createFAQ);
+router.put('/graha/faqs/:id', requireAnyAdmin, updateFAQ);
+router.delete('/graha/faqs/:id', requireAnyAdmin, deleteFAQ);
+
+// Facility Info
+router.put('/graha/facility-info', requireAnyAdmin, updateFacilityInfo);
 
 // ==================== FILE UPLOAD ====================
 

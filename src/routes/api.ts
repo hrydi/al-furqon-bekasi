@@ -3,13 +3,12 @@ import homeRoutes from './api/home';
 import statisticsRoutes from './api/statistics';
 import mainRoutes from './api/main';
 import adminRoutes from './api/admin';
+import authRoutes from './auth';
+import uploadRoutes from './upload';
+import grahaRoutes from './graha';
 
 const router = express.Router();
 
-// ===== DIRECT ENDPOINTS =====
-// These endpoints need to be before mainRoutes to prevent conflicts
-
-// Health check endpoint
 router.get('/health', (req, res, next) => {
   req.url = '/health';
   homeRoutes(req, res, next);
@@ -155,6 +154,9 @@ router.get('/feedback', (req, res, next) => {
 });
 
 // ===== ORIGINAL ROUTES =====
+router.use('/auth', authRoutes);
+router.use('/upload', uploadRoutes);
+router.use('/graha', grahaRoutes);
 router.use('/home', homeRoutes);
 router.use('/statistics', statisticsRoutes);
 router.use('/admin', adminRoutes);

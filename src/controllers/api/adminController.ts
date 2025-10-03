@@ -785,6 +785,37 @@ export class AdminController {
     }
   }
 
+  /**
+   * PATCH /api/v1/admin/users/:id/status
+   * Update user status (Admin & Super Admin)
+   */
+  static async updateUserStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { status }: { status: 'active' | 'inactive' } = req.body;
+
+      // Prevent deactivating self
+      if (id === req.admin?.id && status === 'inactive') {
+        return res.status(400).json(
+          ApiResponse.error('Cannot deactivate your own account', 400)
+        );
+      }
+
+      if (!status || !['active', 'inactive'].includes(status)) {
+        return res.status(400).json(
+          ApiResponse.error('Valid status (active/inactive) is required', 400)
+        );
+      }
+
+      const user = await AdminService.updateUserStatus(id, status);
+      
+      const response = ApiResponse.success(user, 'User status updated successfully');
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // ==================== TRANSACTIONS ====================
 
   /**

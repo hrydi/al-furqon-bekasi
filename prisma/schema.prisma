@@ -439,6 +439,7 @@ model Video {
   @@map("videos")
 }
 
+<<<<<<< HEAD
 // --- Graha Subagdja Models ---
 
 model UMKMPartner {
@@ -465,6 +466,45 @@ model GalleryImage {
 }
 
 enum GalleryImageCategory {
+=======
+// Graha Subagdja Models
+model GrahaUMKMPartner {
+  id          String   @id @default(cuid())
+  name        String
+  category    String
+  description String
+  services    Json     // Array of services
+  contact     Json     // Object: { phone, whatsapp, instagram }
+  image       String?
+  isActive    Boolean  @default(true)
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([category])
+  @@index([orderIndex])
+  @@map("graha_umkm_partners")
+}
+
+model GrahaGallery {
+  id        String                @id @default(cuid())
+  title     String
+  image     String
+  category  GrahaGalleryCategory
+  isActive  Boolean               @default(true)
+  orderIndex Int                  @default(0)
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@index([isActive])
+  @@index([category])
+  @@index([orderIndex])
+  @@map("graha_gallery")
+}
+
+enum GrahaGalleryCategory {
+>>>>>>> 1ef76ee786c1fa324fc12fd207b53d5ff356f550
   facility
   event
   ceremony
@@ -472,6 +512,7 @@ enum GalleryImageCategory {
   exterior
 }
 
+<<<<<<< HEAD
 model FAQ {
   id       Int    @id @default(autoincrement())
   question String
@@ -490,4 +531,34 @@ model FacilityInfo {
   contact     String
 
   @@map("facility_info")
+=======
+model GrahaFAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  isActive  Boolean  @default(true)
+  orderIndex Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([orderIndex])
+  @@map("graha_faq")
+}
+
+model GrahaFacilityInfo {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  capacity    String
+  facilities  Json     // Array of facilities
+  price       String
+  contact     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("graha_facility_info")
+>>>>>>> 1ef76ee786c1fa324fc12fd207b53d5ff356f550
 }

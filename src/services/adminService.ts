@@ -1212,4 +1212,31 @@ export class AdminService {
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
   }
+
+  static async updateUserStatus(id: string, status: 'active' | 'inactive') {
+    const isActive = status === 'active';
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: { 
+        isActive,
+        updatedAt: new Date()
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        name: true,
+        role: true,
+        permissions: true,
+        isActive: true,
+        lastLogin: true,
+        loginCount: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    return user;
+  }
 }
