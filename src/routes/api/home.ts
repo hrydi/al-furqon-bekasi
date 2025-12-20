@@ -5,7 +5,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/home/dashboard:
+ * /api/home/dashboard:
  *   get:
  *     summary: Dashboard data
  *     tags: [Dashboard]

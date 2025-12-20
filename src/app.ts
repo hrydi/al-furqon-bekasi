@@ -18,7 +18,6 @@ app.use(helmet({
 app.use(corsMiddleware);
 app.use((req, res, next) => {
   const now = new Date().toISOString();
-  console.log(`[${now}] ${req.method} ${req.originalUrl}`);
   next();
 });
 app.use(express.json({ limit: '10mb' }));
@@ -41,21 +40,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api/v1', apiRoutes);
-app.use('/articles', (req, res, next) => {
-  req.url = '/articles' + (req.url === '/' ? '' : req.url);
-  apiRoutes(req, res, next);
-});
-
-app.use('/donations', (req, res, next) => {
-  req.url = '/donations' + (req.url === '/' ? '' : req.url);
-  apiRoutes(req, res, next);
-});
-
-app.use('/news', (req, res, next) => {
-  req.url = '/news' + (req.url === '/' ? '' : req.url);
-  apiRoutes(req, res, next);
-});
+// Main API routes - without /v1 prefix
+app.use('/api', apiRoutes);
 
 app.use('*', (req, res) => {
   res.status(404).json({

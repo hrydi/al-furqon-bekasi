@@ -23,7 +23,7 @@ const sendError = (res: Response, message: string, statusCode: number = 500) => 
 export class DashboardController {
   /**
    * Get comprehensive dashboard statistics
-   * GET /api/v1/admin/dashboard/stats
+   * GET /api/admin/dashboard/stats
    */
   static async getDashboardStats(req: Request, res: Response) {
     try {
@@ -266,7 +266,7 @@ export class DashboardController {
 
   /**
    * Get dashboard summary (lightweight)
-   * GET /api/v1/admin/dashboard/summary
+   * GET /api/admin/dashboard/summary
    */
   static async getDashboardSummary(req: Request, res: Response) {
     try {
@@ -320,7 +320,7 @@ export class DashboardController {
 
   /**
    * Get real-time activity feed
-   * GET /api/v1/admin/dashboard/activity
+   * GET /api/admin/dashboard/activity
    */
   static async getRealtimeActivity(req: Request, res: Response) {
     try {
@@ -430,7 +430,7 @@ export class DashboardController {
 
   /**
    * Get charts data for dashboard
-   * GET /api/v1/admin/dashboard/charts
+   * GET /api/admin/dashboard/charts
    */
   static async getChartsData(req: Request, res: Response) {
     try {
@@ -444,7 +444,7 @@ export class DashboardController {
 
   /**
    * Refresh dashboard cache
-   * POST /api/v1/admin/dashboard/stats/refresh
+   * POST /api/admin/dashboard/stats/refresh
    */
   static async refreshDashboardCache(req: Request, res: Response) {
     try {

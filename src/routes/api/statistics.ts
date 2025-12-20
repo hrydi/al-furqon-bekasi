@@ -5,7 +5,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/statistics/public:
+ * /api/statistics/public:
  *   get:
  *     summary: Public statistics
  *     tags: [Statistics]
@@ -51,7 +51,7 @@ const router = Router();
  *       500:
  *         description: Server error
  */
-// GET /api/v1/statistics/public  
+// GET /api/statistics/public  
 router.get('/public', HomeController.getPublicStats);
 
 export default router;

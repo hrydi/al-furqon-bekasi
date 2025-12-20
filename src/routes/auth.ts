@@ -30,15 +30,20 @@ const registerValidation = validate({
 });
 
 const loginValidation = validate({
+  username: {
+    required: false,
+    type: 'string',
+    minLength: 3
+  },
   email: {
-    required: true,
+    required: false,
     type: 'string',
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   },
   password: {
     required: true,
     type: 'string',
-    minLength: 8
+    minLength: 6
   }
 });
 

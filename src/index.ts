@@ -7,8 +7,6 @@ config();
 const PORT = AppConfig.port;
 
 app.listen(PORT, () => {
-  console.log(`Al-Furqon Backend running on port ${PORT}`);
-  console.log(`Base URL: ${AppConfig.baseUrl}`);
 });
 
 export default app;

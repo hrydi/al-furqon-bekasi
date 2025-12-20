@@ -33,12 +33,12 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/health',
-      dashboard: '/api/v1/home/dashboard',
-      statistics: '/api/v1/statistics/public',
-      articles: '/api/v1/articles',
-      donations: '/api/v1/donations',
-      news: '/api/v1/news',
-      auth: '/api/v1/auth',
+      dashboard: '/api/home/dashboard',
+      statistics: '/api/statistics/public',
+      articles: '/api/articles',
+      donations: '/api/donations',
+      news: '/api/news',
+      auth: '/api/auth',
       documentation: '/api-docs'
     },
     documentation: 'API untuk Content Management System Masjid Al-Furqon'
@@ -55,7 +55,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.get('/api/v1/home/dashboard', async (req, res) => {
+app.get('/api/home/dashboard', async (req, res) => {
   try {
     const [stats, latestArticles, activeDonations, latestNews] = await Promise.all([
       prisma.$transaction([
@@ -130,7 +130,7 @@ app.get('/api/v1/home/dashboard', async (req, res) => {
   }
 });
 
-app.get('/api/v1/statistics/public', async (req, res) => {
+app.get('/api/statistics/public', async (req, res) => {
   try {
     const stats = await prisma.$transaction([
       prisma.article.count({ where: { status: 'published' } }),
@@ -163,7 +163,7 @@ app.get('/api/v1/statistics/public', async (req, res) => {
   }
 });
 
-app.get('/api/v1/articles', async (req, res) => {
+app.get('/api/articles', async (req, res) => {
   try {
     const { category, limit, page } = req.query;
     const pageNum = parseInt(page as string) || 1;
@@ -215,7 +215,7 @@ app.get('/api/v1/articles', async (req, res) => {
   }
 });
 
-app.get('/api/v1/donations', async (req, res) => {
+app.get('/api/donations', async (req, res) => {
   try {
     const { category, status = 'active' } = req.query;
 
@@ -258,7 +258,7 @@ app.get('/api/v1/donations', async (req, res) => {
   }
 });
 
-app.post('/api/v1/donations', async (req, res) => {
+app.post('/api/donations', async (req, res) => {
   try {
     const { title, description, targetAmount, collectedAmount = 0, imageUrl, endDate } = req.body;
 
@@ -298,7 +298,7 @@ app.post('/api/v1/donations', async (req, res) => {
   }
 });
 
-app.get('/api/v1/news', async (req, res) => {
+app.get('/api/news', async (req, res) => {
   try {
     const { priority, limit } = req.query;
     const limitNum = parseInt(limit as string) || 10;
@@ -335,7 +335,7 @@ app.get('/api/v1/news', async (req, res) => {
   }
 });
 
-app.post('/api/v1/articles', async (req, res) => {
+app.post('/api/articles', async (req, res) => {
   try {
     const { title, content, excerpt, imageUrl, published = false } = req.body;
 
@@ -375,7 +375,7 @@ app.post('/api/v1/articles', async (req, res) => {
   }
 });
 
-app.post('/api/v1/news', async (req, res) => {
+app.post('/api/news', async (req, res) => {
   try {
     const { title, content, excerpt, imageUrl } = req.body;
 
