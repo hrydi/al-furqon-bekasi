@@ -75,10 +75,21 @@ export const AuthController = {
 
   login: async (req: Request<{}, {}, LoginRequest>, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { email, password } = req.body;
+      const { email, username, password } = req.body;
 
-      const user = await prisma.user.findUnique({
-        where: { email },
+      // Support login with email OR username
+      const loginIdentifier = email || username;
+      if (!loginIdentifier) {
+        throw new AppError(400, 'Email or username is required');
+      }
+
+      const user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { email: loginIdentifier },
+            { username: loginIdentifier }
+          ]
+        },
         select: {
           id: true,
           email: true,
@@ -91,16 +102,16 @@ export const AuthController = {
 
       if (!user) {
         // Use a generic message to prevent user enumeration
-        throw new AppError(401, 'Invalid email or password');
+        throw new AppError(401, 'Invalid credentials');
       }
 
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        throw new AppError(401, 'Invalid email or password');
+        throw new AppError(401, 'Invalid credentials');
       }
 
       const token = jwt.sign(
-        { userId: user.id, email: user.email, role: user.role },
+        { userId: user.id, email: user.email, username: user.username, role: user.role },
         JWT_SECRET,
         { expiresIn: '24h' }
       );

@@ -153,7 +153,7 @@ async function uploadArticles() {
 
     for (const article of articles) {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/admin/articles`, {
+        const response = await fetch(`${BACKEND_URL}/api/admin/articles`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(article)
@@ -197,7 +197,7 @@ async function uploadDonations() {
 
     for (const donation of donations) {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/admin/donations`, {
+        const response = await fetch(`${BACKEND_URL}/api/admin/donations`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(donation)
@@ -244,7 +244,7 @@ async function uploadNews() {
 
     for (const newsItem of news) {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/admin/news`, {
+        const response = await fetch(`${BACKEND_URL}/api/admin/news`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newsItem)
@@ -273,7 +273,7 @@ async function uploadNews() {
 async function checkBackend() {
   try {
     console.log('🔍 Checking backend connection...')
-    const response = await fetch(`${BACKEND_URL}/api/v1/health`)
+    const response = await fetch(`${BACKEND_URL}/api/health`)
     
     if (response.ok) {
       console.log('✅ Backend is reachable')
