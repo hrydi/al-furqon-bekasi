@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
 import { Request } from 'express';
+import { AppConfig } from '../utils/config';
 
 // Ensure upload directories exist
 const ensureDirectoriesExist = () => {
@@ -110,7 +111,7 @@ export class ImageProcessor {
         .webp({ quality: 90 })
         .toFile(optimizedPath);
 
-      const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+      const baseUrl = AppConfig.baseUrl;
       const year = new Date().getFullYear();
       const month = String(new Date().getMonth() + 1).padStart(2, '0');
       

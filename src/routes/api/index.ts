@@ -1,8 +1,8 @@
-import express from 'express';
-import { config } from 'dotenv';
-import { PrismaClient } from '@prisma/client';
-import swaggerUi from 'swagger-ui-express';
-import grahaSubagdjaRouter from './grahaSubagdja';
+import express from "express";
+import { config } from "dotenv";
+import { PrismaClient } from "@prisma/client";
+import swaggerUi from "swagger-ui-express";
+import grahaSubagdjaRouter from "./grahaSubagdja";
 
 config();
 
@@ -13,10 +13,10 @@ const prisma = new PrismaClient();
 app.use(express.json());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
     res.sendStatus(200);
   } else {
     next();
@@ -27,87 +27,87 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: 'Welcome to Al-Furqon Backend API',
-    version: '1.0.0',
+    message: "Welcome to Al-Furqon Backend API",
+    version: "1.0.0",
     endpoints: {
-      health: '/health',
-      dashboard: '/api/v1/home/dashboard',
-      statistics: '/api/v1/statistics/public',
-      articles: '/api/v1/articles',
-      donations: '/api/v1/donations',
-      news: '/api/v1/news',
-      auth: '/api/v1/auth',
-      grahaSubagdja: '/api/v1/graha-subagdja',
-      documentation: '/api-docs'
+      health: "/health",
+      dashboard: "/api/home/dashboard",
+      statistics: "/api/statistics/public",
+      articles: "/api/articles",
+      donations: "/api/donations",
+      news: "/api/news",
+      auth: "/api/auth",
+      documentation: "/api-docs",
     },
-    documentation: 'API untuk Content Management System Masjid Al-Furqon'
+    documentation: "API untuk Content Management System Masjid Al-Furqon",
   });
 });
 
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
     success: true,
-    message: 'Al-Furqon Backend is running',
-    environment: process.env.NODE_ENV || 'development',
+    message: "Al-Furqon Backend is running",
+    environment: process.env.NODE_ENV || "development",
     timestamp: new Date().toISOString(),
-    port: PORT
+    port: PORT,
   });
 });
 
-app.get('/api/v1/home/dashboard', async (req, res) => {
+app.get("/api/home/dashboard", async (req, res) => {
   try {
-    const [stats, latestArticles, activeDonations, latestNews] = await Promise.all([
-      prisma.$transaction([
-        prisma.article.count({ where: { status: 'published' } }),
-        prisma.donation.count({ where: { status: 'active' } }),
-        prisma.news.count({ where: { publishedAt: { not: null } } }),
-        prisma.user.count()
-      ]),
-      prisma.article.findMany({
-        where: { status: 'published' },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          description: true,
-          image: true,
-          category: true,
-          publishedAt: true,
-          authorName: true
-        }
-      }),
-      prisma.donation.findMany({
-        where: { status: 'active' },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          image: true,
-          targetAmount: true,
-          collectedAmount: true,
-          endDate: true
-        }
-      }),
-      prisma.news.findMany({
-        where: { publishedAt: { not: null } },
-        orderBy: { publishedAt: 'desc' },
-        take: 5,
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          priority: true,
-          publishedAt: true
-        }
-      })
-    ]);
+    const [stats, latestArticles, activeDonations, latestNews] =
+      await Promise.all([
+        prisma.$transaction([
+          prisma.article.count({ where: { status: "published" } }),
+          prisma.donation.count({ where: { status: "active" } }),
+          prisma.news.count({ where: { publishedAt: { not: null } } }),
+          prisma.user.count(),
+        ]),
+        prisma.article.findMany({
+          where: { status: "published" },
+          orderBy: { createdAt: "desc" },
+          take: 3,
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            description: true,
+            image: true,
+            category: true,
+            publishedAt: true,
+            authorName: true,
+          },
+        }),
+        prisma.donation.findMany({
+          where: { status: "active" },
+          orderBy: { createdAt: "desc" },
+          take: 3,
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            image: true,
+            targetAmount: true,
+            collectedAmount: true,
+            endDate: true,
+          },
+        }),
+        prisma.news.findMany({
+          where: { publishedAt: { not: null } },
+          orderBy: { publishedAt: "desc" },
+          take: 5,
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            priority: true,
+            publishedAt: true,
+          },
+        }),
+      ]);
 
     res.json({
       success: true,
@@ -116,32 +116,32 @@ app.get('/api/v1/home/dashboard', async (req, res) => {
           totalArticles: stats[0],
           activeDonations: stats[1],
           totalNews: stats[2],
-          totalUsers: stats[3]
+          totalUsers: stats[3],
         },
         latestArticles,
         activeDonations,
-        latestNews
-      }
+        latestNews,
+      },
     });
   } catch (error) {
-    console.error('Dashboard error:', error);
+    console.error("Dashboard error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal mengambil data dashboard'
+      message: "Gagal mengambil data dashboard",
     });
   }
 });
 
-app.get('/api/v1/statistics/public', async (req, res) => {
+app.get("/api/statistics/public", async (req, res) => {
   try {
     const stats = await prisma.$transaction([
-      prisma.article.count({ where: { status: 'published' } }),
-      prisma.donation.count({ where: { status: 'active' } }),
+      prisma.article.count({ where: { status: "published" } }),
+      prisma.donation.count({ where: { status: "active" } }),
       prisma.donation.aggregate({
-        where: { status: 'active' },
-        _sum: { targetAmount: true, collectedAmount: true }
+        where: { status: "active" },
+        _sum: { targetAmount: true, collectedAmount: true },
       }),
-      prisma.news.count({ where: { publishedAt: { not: null } } })
+      prisma.news.count({ where: { publishedAt: { not: null } } }),
     ]);
 
     res.json({
@@ -152,27 +152,32 @@ app.get('/api/v1/statistics/public', async (req, res) => {
         totalDonationTarget: stats[2]._sum.targetAmount || 0,
         totalDonationCollected: stats[2]._sum.collectedAmount || 0,
         totalNews: stats[3],
-        donationProgress: stats[2]._sum.targetAmount ? 
-          Math.round(((stats[2]._sum.collectedAmount || 0) / stats[2]._sum.targetAmount) * 100) : 0
-      }
+        donationProgress: stats[2]._sum.targetAmount
+          ? Math.round(
+              ((stats[2]._sum.collectedAmount || 0) /
+                stats[2]._sum.targetAmount) *
+                100
+            )
+          : 0,
+      },
     });
   } catch (error) {
-    console.error('Statistics error:', error);
+    console.error("Statistics error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal mengambil statistik'
+      message: "Gagal mengambil statistik",
     });
   }
 });
 
-app.get('/api/v1/articles', async (req, res) => {
+app.get("/api/articles", async (req, res) => {
   try {
     const { category, limit, page } = req.query;
     const pageNum = parseInt(page as string) || 1;
     const limitNum = parseInt(limit as string) || 10;
     const skip = (pageNum - 1) * limitNum;
 
-    const where: any = { status: 'published' };
+    const where: any = { status: "published" };
     if (category) {
       where.category = category;
     }
@@ -180,7 +185,7 @@ app.get('/api/v1/articles', async (req, res) => {
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         where,
-        orderBy: { publishedAt: 'desc' },
+        orderBy: { publishedAt: "desc" },
         skip,
         take: limitNum,
         select: {
@@ -192,10 +197,10 @@ app.get('/api/v1/articles', async (req, res) => {
           category: true,
           publishedAt: true,
           authorName: true,
-          authorAvatar: true
-        }
+          authorAvatar: true,
+        },
       }),
-      prisma.article.count({ where })
+      prisma.article.count({ where }),
     ]);
 
     res.json({
@@ -205,21 +210,21 @@ app.get('/api/v1/articles', async (req, res) => {
         page: pageNum,
         limit: limitNum,
         total,
-        totalPages: Math.ceil(total / limitNum)
-      }
+        totalPages: Math.ceil(total / limitNum),
+      },
     });
   } catch (error) {
-    console.error('Articles error:', error);
+    console.error("Articles error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal mengambil artikel'
+      message: "Gagal mengambil artikel",
     });
   }
 });
 
-app.get('/api/v1/donations', async (req, res) => {
+app.get("/api/donations", async (req, res) => {
   try {
-    const { category, status = 'active' } = req.query;
+    const { category, status = "active" } = req.query;
 
     const where: any = { status };
     if (category) {
@@ -228,7 +233,7 @@ app.get('/api/v1/donations', async (req, res) => {
 
     const donations = await prisma.donation.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       select: {
         id: true,
         title: true,
@@ -237,37 +242,46 @@ app.get('/api/v1/donations', async (req, res) => {
         targetAmount: true,
         collectedAmount: true,
         endDate: true,
-        createdAt: true
-      }
+        createdAt: true,
+      },
     });
 
-    const donationsWithProgress = donations.map(donation => ({
+    const donationsWithProgress = donations.map((donation) => ({
       ...donation,
-      progress: Math.round((donation.collectedAmount / donation.targetAmount) * 100),
-      remainingAmount: donation.targetAmount - donation.collectedAmount
+      progress: Math.round(
+        (donation.collectedAmount / donation.targetAmount) * 100
+      ),
+      remainingAmount: donation.targetAmount - donation.collectedAmount,
     }));
 
     res.json({
       success: true,
-      data: donationsWithProgress
+      data: donationsWithProgress,
     });
   } catch (error) {
-    console.error('Donations error:', error);
+    console.error("Donations error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal mengambil donasi'
+      message: "Gagal mengambil donasi",
     });
   }
 });
 
-app.post('/api/v1/donations', async (req, res) => {
+app.post("/api/donations", async (req, res) => {
   try {
-    const { title, description, targetAmount, collectedAmount = 0, imageUrl, endDate } = req.body;
+    const {
+      title,
+      description,
+      targetAmount,
+      collectedAmount = 0,
+      imageUrl,
+      endDate,
+    } = req.body;
 
     if (!title || !description || !targetAmount) {
       return res.status(400).json({
         success: false,
-        message: 'Title, description, dan targetAmount harus diisi'
+        message: "Title, description, dan targetAmount harus diisi",
       });
     }
 
@@ -278,29 +292,32 @@ app.post('/api/v1/donations', async (req, res) => {
         targetAmount: Number(targetAmount),
         collectedAmount: Number(collectedAmount),
         image: imageUrl,
-        status: 'active',
-        endDate: endDate ? new Date(endDate) : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-        slug: title.toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)/g, '')
-      }
+        status: "active",
+        endDate: endDate
+          ? new Date(endDate)
+          : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        slug: title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, ""),
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Donasi berhasil dibuat',
-      data: donation
+      message: "Donasi berhasil dibuat",
+      data: donation,
     });
   } catch (error) {
-    console.error('Create donation error:', error);
+    console.error("Create donation error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal membuat donasi'
+      message: "Gagal membuat donasi",
     });
   }
 });
 
-app.get('/api/v1/news', async (req, res) => {
+app.get("/api/news", async (req, res) => {
   try {
     const { priority, limit } = req.query;
     const limitNum = parseInt(limit as string) || 10;
@@ -312,7 +329,7 @@ app.get('/api/v1/news', async (req, res) => {
 
     const news = await prisma.news.findMany({
       where,
-      orderBy: { publishedAt: 'desc' },
+      orderBy: { publishedAt: "desc" },
       take: limitNum,
       select: {
         id: true,
@@ -320,31 +337,31 @@ app.get('/api/v1/news', async (req, res) => {
         content: true,
         priority: true,
         publishedAt: true,
-        createdAt: true
-      }
+        createdAt: true,
+      },
     });
 
     res.json({
       success: true,
-      data: news
+      data: news,
     });
   } catch (error) {
-    console.error('News error:', error);
+    console.error("News error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal mengambil berita'
+      message: "Gagal mengambil berita",
     });
   }
 });
 
-app.post('/api/v1/articles', async (req, res) => {
+app.post("/api/articles", async (req, res) => {
   try {
     const { title, content, excerpt, imageUrl, published = false } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({
         success: false,
-        message: 'Title dan content harus diisi'
+        message: "Title dan content harus diisi",
       });
     }
 
@@ -352,39 +369,40 @@ app.post('/api/v1/articles', async (req, res) => {
       data: {
         title,
         content,
-        description: excerpt || content.substring(0, 200) + '...',
+        description: excerpt || content.substring(0, 200) + "...",
         image: imageUrl,
-        category: 'kegiatan',
-        status: published ? 'published' : 'draft',
-        slug: title.toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)/g, ''),
-        publishedAt: published ? new Date() : null
-      }
+        category: "kegiatan",
+        status: published ? "published" : "draft",
+        slug: title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, ""),
+        publishedAt: published ? new Date() : null,
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Artikel berhasil dibuat',
-      data: article
+      message: "Artikel berhasil dibuat",
+      data: article,
     });
   } catch (error) {
-    console.error('Create article error:', error);
+    console.error("Create article error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal membuat artikel'
+      message: "Gagal membuat artikel",
     });
   }
 });
 
-app.post('/api/v1/news', async (req, res) => {
+app.post("/api/news", async (req, res) => {
   try {
     const { title, content, excerpt, imageUrl } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({
         success: false,
-        message: 'Title dan content harus diisi'
+        message: "Title dan content harus diisi",
       });
     }
 
@@ -392,49 +410,48 @@ app.post('/api/v1/news', async (req, res) => {
       data: {
         title,
         content,
-        description: excerpt || content.substring(0, 200) + '...',
+        description: excerpt || content.substring(0, 200) + "...",
         image: imageUrl,
-        priority: 'medium',
+        priority: "medium",
         publishedAt: new Date(),
-        slug: title.toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)/g, '')
-      }
+        slug: title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, ""),
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Berita berhasil dibuat',
-      data: news
+      message: "Berita berhasil dibuat",
+      data: news,
     });
   } catch (error) {
-    console.error('Create news error:', error);
+    console.error("Create news error:", error);
     res.status(500).json({
       success: false,
-      message: 'Gagal membuat berita'
+      message: "Gagal membuat berita",
     });
   }
 });
 
 // Graha Subagdja routes
-app.use('/api/v1/graha-subagdja', grahaSubagdjaRouter);
+app.use("/api/v1/graha-subagdja", grahaSubagdjaRouter);
 
 app.use((err: any, req: any, res: any, next: any) => {
-  console.error('Unhandled error:', err);
+  console.error("Unhandled error:", err);
   res.status(500).json({
     success: false,
-    message: 'Internal server error'
+    message: "Internal server error",
   });
 });
 
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Endpoint tidak ditemukan',
-    path: req.originalUrl
+    message: "Endpoint tidak ditemukan",
+    path: req.originalUrl,
   });
 });
-
-
 
 export default app;

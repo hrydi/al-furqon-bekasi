@@ -125,17 +125,17 @@ API ini hanya bisa diakses dari localhost untuk alasan keamanan. Beberapa pembat
 |--------|----------|-------------|
 | `GET` | `/` | Welcome message with endpoints list |
 | `GET` | `/health` | Health check status |
-| `GET` | `/api/v1/home/dashboard` | Homepage dashboard data |
-| `GET` | `/api/v1/statistics/public` | Public statistics |
+| `GET` | `/api/home/dashboard` | Homepage dashboard data |
+| `GET` | `/api/statistics/public` | Public statistics |
 
 ### 📰 **Articles Management**
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| `GET` | `/api/v1/articles` | Get articles (with pagination) | ❌ |
-| `GET` | `/api/v1/articles/:id` | Get article by ID | ❌ |
-| `POST` | `/api/v1/articles` | Create new article | ✅ |
-| `PUT` | `/api/v1/articles/:id` | Update article | ✅ |
-| `DELETE` | `/api/v1/articles/:id` | Delete article | ✅ |
+| `GET` | `/api//articles` | Get articles (with pagination) | ❌ |
+| `GET` | `/api/articles/:id` | Get article by ID | ❌ |
+| `POST` | `/api/articles` | Create new article | ✅ |
+| `PUT` | `/api/articles/:id` | Update article | ✅ |
+| `DELETE` | `/api/articles/:id` | Delete article | ✅ |
 
 ### 💰 **Donations Management** (✨ **Enhanced**)
 | Method | Endpoint | Description | Auth |

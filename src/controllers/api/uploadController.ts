@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { uploadArticleImage, ImageProcessor, cleanupFailedUploads } from '../../middleware/upload';
 import { ApiResponse } from '../../utils/response';
+import { AppConfig } from '../../utils/config';
 import path from 'path';
 import fs from 'fs';
 
@@ -123,7 +124,7 @@ export class UploadController {
 
       // Recursively get all images
       const images: any[] = [];
-      const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+      const baseUrl = AppConfig.baseUrl;
 
       const scanDirectory = (dir: string, relativePath: string = '') => {
         const items = fs.readdirSync(dir);

@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   status: 'success' | 'error';
   message: string;
   data: T | null;

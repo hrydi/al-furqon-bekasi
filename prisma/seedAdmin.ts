@@ -33,6 +33,10 @@ async function seedAdminUsers() {
         'news.read',
         'news.update',
         'news.delete',
+        'videos.create',
+        'videos.read',
+        'videos.update',
+        'videos.delete',
         'transactions.read',
         'files.upload',
         'analytics.read'
@@ -64,6 +68,10 @@ async function seedAdminUsers() {
         'news.read',
         'news.update',
         'news.delete',
+        'videos.create',
+        'videos.read',
+        'videos.update',
+        'videos.delete',
         'transactions.read',
         'files.upload',
         'analytics.read'
@@ -89,6 +97,9 @@ async function seedAdminUsers() {
         'news.create',
         'news.read',
         'news.update',
+        'videos.create',
+        'videos.read',
+        'videos.update',
         'files.upload'
       ]),
       isActive: true

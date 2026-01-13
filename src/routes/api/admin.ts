@@ -44,9 +44,9 @@ router.post('/auth/login', AdminController.login);
 router.get('/auth/login', (req, res) => {
   res.json({
     ok: true,
-    message: 'This endpoint expects POST /api/v1/admin/auth/login with { username, password }.',
+    message: 'This endpoint expects POST /api/admin/auth/login with { username, password }.',
     method: 'POST',
-    path: '/api/v1/admin/auth/login'
+    path: '/api/admin/auth/login'
   });
 });
 router.post('/auth/refresh', AdminController.refreshToken);

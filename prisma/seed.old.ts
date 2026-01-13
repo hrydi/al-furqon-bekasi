@@ -18,7 +18,7 @@ interface ApiResponse {
 }
 
 // Configuration
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 const FRONTEND_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000'
 
 console.log('🌱 Starting comprehensive seed process...')
@@ -160,7 +160,7 @@ async function uploadArticles(): Promise<UploadResult> {
     const results = []
     for (const article of allArticles) {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/articles`, {
+        const response = await fetch(`${BACKEND_URL}/api/articles`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ async function uploadGallery(): Promise<UploadResult> {
     const results = []
     for (const item of galleryData) {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/gallery`, {
+        const response = await fetch(`${BACKEND_URL}/api/gallery`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ async function uploadDonations(): Promise<UploadResult> {
 
     console.log(`💝 Prepared ${donations.length} donation programs for upload`)
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/donations`, {
+    const response = await fetch(`${BACKEND_URL}/api/donations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -326,7 +326,7 @@ async function uploadNews(): Promise<UploadResult> {
 
     console.log(`📑 Prepared ${news.length} news items for upload`)
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/news`, {
+    const response = await fetch(`${BACKEND_URL}/api/news`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
