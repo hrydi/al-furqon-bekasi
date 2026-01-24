@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import swaggerUi from "swagger-ui-express";
 import grahaSubagdjaRouter from "./grahaSubagdja";
+import homeRouter from "./home";
 
 config();
 
@@ -156,7 +157,7 @@ app.get("/api/statistics/public", async (req, res) => {
           ? Math.round(
               ((stats[2]._sum.collectedAmount || 0) /
                 stats[2]._sum.targetAmount) *
-                100
+                100,
             )
           : 0,
       },
@@ -249,7 +250,7 @@ app.get("/api/donations", async (req, res) => {
     const donationsWithProgress = donations.map((donation) => ({
       ...donation,
       progress: Math.round(
-        (donation.collectedAmount / donation.targetAmount) * 100
+        (donation.collectedAmount / donation.targetAmount) * 100,
       ),
       remainingAmount: donation.targetAmount - donation.collectedAmount,
     }));
@@ -435,8 +436,8 @@ app.post("/api/news", async (req, res) => {
   }
 });
 
-// Graha Subagdja routes
 app.use("/api/v1/graha-subagdja", grahaSubagdjaRouter);
+app.use("/api", homeRouter);
 
 app.use((err: any, req: any, res: any, next: any) => {
   console.error("Unhandled error:", err);

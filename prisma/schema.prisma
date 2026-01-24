@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -46,6 +46,7 @@ model Article {
   description  String?
   content      String?
   image        String?
+  images       Json?
   category     Category
   status       Status    @default(draft)
   authorId     String?
@@ -439,42 +440,14 @@ model Video {
   @@map("videos")
 }
 
-<<<<<<< HEAD
-// --- Graha Subagdja Models ---
-
-model UMKMPartner {
-  id               Int      @id @default(autoincrement())
-  name             String
-  category         String
-  description      String
-  services         String[]
-  contactPhone     String
-  contactWhatsapp  String
-  contactInstagram String
-  image            String
-
-  @@map("umkm_partners")
-}
-
-model GalleryImage {
-  id       Int                  @id @default(autoincrement())
-  title    String
-  image    String
-  category GalleryImageCategory
-
-  @@map("gallery_images")
-}
-
-enum GalleryImageCategory {
-=======
 // Graha Subagdja Models
 model GrahaUMKMPartner {
   id          String   @id @default(cuid())
   name        String
   category    String
   description String
-  services    Json     // Array of services
-  contact     Json     // Object: { phone, whatsapp, instagram }
+  services    Json // Array of services
+  contact     Json // Object: { phone, whatsapp, instagram }
   image       String?
   isActive    Boolean  @default(true)
   orderIndex  Int      @default(0)
@@ -488,14 +461,14 @@ model GrahaUMKMPartner {
 }
 
 model GrahaGallery {
-  id        String                @id @default(cuid())
-  title     String
-  image     String
-  category  GrahaGalleryCategory
-  isActive  Boolean               @default(true)
+  id         String               @id @default(cuid())
+  title      String
+  image      String
+  category   GrahaGalleryCategory
+  isActive   Boolean              @default(true)
   orderIndex Int                  @default(0)
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
 
   @@index([isActive])
   @@index([category])
@@ -504,7 +477,6 @@ model GrahaGallery {
 }
 
 enum GrahaGalleryCategory {
->>>>>>> 1ef76ee786c1fa324fc12fd207b53d5ff356f550
   facility
   event
   ceremony
@@ -512,34 +484,14 @@ enum GrahaGalleryCategory {
   exterior
 }
 
-<<<<<<< HEAD
-model FAQ {
-  id       Int    @id @default(autoincrement())
-  question String
-  answer   String
-
-  @@map("faqs")
-}
-
-model FacilityInfo {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  capacity    String
-  facilities  String[]
-  price       String
-  contact     String
-
-  @@map("facility_info")
-=======
 model GrahaFAQ {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String
-  isActive  Boolean  @default(true)
-  orderIndex Int     @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  question   String
+  answer     String
+  isActive   Boolean  @default(true)
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([isActive])
   @@index([orderIndex])
@@ -551,7 +503,7 @@ model GrahaFacilityInfo {
   title       String
   description String
   capacity    String
-  facilities  Json     // Array of facilities
+  facilities  Json // Array of facilities
   price       String
   contact     String
   isActive    Boolean  @default(true)
@@ -560,5 +512,4 @@ model GrahaFacilityInfo {
 
   @@index([isActive])
   @@map("graha_facility_info")
->>>>>>> 1ef76ee786c1fa324fc12fd207b53d5ff356f550
 }

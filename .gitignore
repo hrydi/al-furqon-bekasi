@@ -66,6 +66,13 @@ jspm_packages/
 .env.test.local
 .env.production.local
 
+# SQLite database files (local development only)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
