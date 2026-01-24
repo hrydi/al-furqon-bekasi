@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -46,6 +46,7 @@ model Article {
   description  String?
   content      String?
   image        String?
+  images       Json?
   category     Category
   status       Status    @default(draft)
   authorId     String?
@@ -416,20 +417,20 @@ model UserSession {
 
 // Videos Model (YouTube Video Management)
 model Video {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  youtubeUrl  String
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  youtubeUrl   String
   thumbnailUrl String?
-  duration    String?
-  isActive    Boolean  @default(true)
-  isFeatured  Boolean  @default(false)
-  tags        String?
-  orderIndex  Int      @default(0)
-  category    String   @default("general")
-  viewCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  duration     String?
+  isActive     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+  tags         String?
+  orderIndex   Int      @default(0)
+  category     String   @default("general")
+  viewCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([isActive])
   @@index([isFeatured])
@@ -445,8 +446,8 @@ model GrahaUMKMPartner {
   name        String
   category    String
   description String
-  services    Json     // Array of services
-  contact     Json     // Object: { phone, whatsapp, instagram }
+  services    Json // Array of services
+  contact     Json // Object: { phone, whatsapp, instagram }
   image       String?
   isActive    Boolean  @default(true)
   orderIndex  Int      @default(0)
@@ -460,14 +461,14 @@ model GrahaUMKMPartner {
 }
 
 model GrahaGallery {
-  id        String                @id @default(cuid())
-  title     String
-  image     String
-  category  GrahaGalleryCategory
-  isActive  Boolean               @default(true)
+  id         String               @id @default(cuid())
+  title      String
+  image      String
+  category   GrahaGalleryCategory
+  isActive   Boolean              @default(true)
   orderIndex Int                  @default(0)
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
 
   @@index([isActive])
   @@index([category])
@@ -484,13 +485,13 @@ enum GrahaGalleryCategory {
 }
 
 model GrahaFAQ {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String
-  isActive  Boolean  @default(true)
-  orderIndex Int     @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  question   String
+  answer     String
+  isActive   Boolean  @default(true)
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([isActive])
   @@index([orderIndex])
@@ -502,7 +503,7 @@ model GrahaFacilityInfo {
   title       String
   description String
   capacity    String
-  facilities  Json     // Array of facilities
+  facilities  Json // Array of facilities
   price       String
   contact     String
   isActive    Boolean  @default(true)
